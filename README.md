@@ -48,7 +48,7 @@ If the Reviewer returns a `fail` status, the Generator is re-run with the feedba
 ## Project Structure
 
 ```
-Eklavya.me/
+Adaptive Learning Content System/
 ├── agents/
 │   ├── __init__.py          # Package exports
 │   ├── generator.py         # GeneratorAgent class
@@ -195,10 +195,6 @@ Refinement is limited to **1 pass** by design. This is enforced in `agents/orche
 - Refinement is limited to one pass to prevent infinite loops
 - MCQs always have exactly 4 options with a single correct answer
 - Requires a valid OpenAI API key with available credits
-
-## License
-
-This project is part of the Eklavya.me internship project.
 
 ## Support
 
