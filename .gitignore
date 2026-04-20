@@ -1,4 +1,4 @@
-# Environment variables (contains API keys)
+# Environment variables
 .env
 
 # Python
@@ -21,6 +21,12 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Database
+*.db
+
+# Pytest
+.pytest_cache/
 
 # Output files
 example_result_*.json
