@@ -1,10 +1,13 @@
-"""Configuration constants for the Adaptive Learning Content System."""
+"""Central configuration for the Governed AI Content Pipeline."""
 
 OPENAI_MODEL = "gpt-4o-mini"
 GENERATION_TEMPERATURE = 0.7
 REVIEW_TEMPERATURE = 0.3
-MCQ_COUNT = 4
-MAX_REFINEMENT_PASSES = 1
+
+MAX_REFINEMENT_ATTEMPTS = 2
+
+MIN_AVERAGE_SCORE = 4.0
+MIN_INDIVIDUAL_SCORE = 3
 
 GRADE_LEVEL_SETTINGS = {
     1:  {"vocabulary": "very simple", "sentence_length": "short",       "concepts": "basic"},
@@ -20,9 +23,3 @@ GRADE_LEVEL_SETTINGS = {
     11: {"vocabulary": "academic",    "sentence_length": "long",        "concepts": "complex"},
     12: {"vocabulary": "academic",    "sentence_length": "long",        "concepts": "complex"},
 }
-
-EVALUATION_CRITERIA = [
-    "Age appropriateness",
-    "Conceptual correctness",
-    "Clarity",
-]
