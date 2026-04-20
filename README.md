@@ -1,67 +1,99 @@
-# Adaptive Learning Content System
+# Governed AI Content Pipeline
 
-**Agent-driven pipeline for generating, evaluating, and refining educational content**
+A deterministic, auditable AI pipeline for structured educational content generation.
+
+Production-grade AI pipeline for generating, evaluating, and refining educational content with full auditability.
 
 ## Overview
 
-This system implements two AI agents that work together to produce high-quality educational content:
+Four AI agents orchestrated through a deterministic pipeline with strict governance:
 
-1. **Generator Agent** — Creates age-appropriate educational content (explanations + MCQs)
-2. **Reviewer Agent** — Evaluates content for quality, accuracy, and appropriateness
+| Agent | Role |
+|-------|------|
+| **Generator** | Produces schema-validated educational content (explanation + MCQs + teacher notes) with grade-appropriate language |
+| **Reviewer** | Quantitative evaluation across 4 criteria with explicit pass/fail thresholds |
+| **Refiner** | Improves content based on structured reviewer feedback (max 2 refinement attempts) |
+| **Tagger** | Classifies approved content with metadata (subject, difficulty, Bloom's level) |
 
-If the Reviewer returns a `fail` status, the Generator is re-run with the feedback embedded. Refinement is limited to one pass.
+**Every execution produces a complete `RunArtifact`** capturing input, all attempts (draft → review → refinement), final decision, and timestamps.
+
+## Why This System
+
+Focuses on reliability through schema validation, quantitative evaluation, bounded refinement, and full auditability via RunArtifact.
+
+**Pipeline Flow:**
+```
+Generator → Reviewer → Refiner → Tagger → RunArtifact → DB
+```
 
 ## Architecture
 
 ```
-+-----------------------------------------------------------+
-|                     Streamlit UI                          |
-|  (Input: Grade & Topic  ->  Trigger Pipeline)             |
-+----------------------------+------------------------------+
-                             |
-                             v
-+-----------------------------------------------------------+
-|                Orchestrator (Pipeline)                     |
-|                                                           |
-|   +--------------+       +--------------+                 |
-|   |  Generator   | ----> |  Reviewer    |                 |
-|   |   Agent      |       |   Agent      |                 |
-|   +--------------+       +------+-------+                 |
-|                                 |                         |
-|                          Status: Pass?                    |
-|                            /        \                     |
-|                         Yes          No                   |
-|                          |            |                   |
-|                       [Done]    Refine + Re-review        |
-|                                 (1 pass max)              |
-+-----------------------------------------------------------+
-                             |
-                             v
-+-----------------------------------------------------------+
-|  Output Display                                           |
-|  - Generated Content & Feedback                           |
-|  - Refined Output (if applicable)                         |
-|  - Export as JSON                                         |
-+-----------------------------------------------------------+
+Input (grade + topic)
+        │
+        ▼
+┌─────────────────────────────────────────────────────┐
+│                  Orchestrator                        │
+│                                                     │
+│  ┌───────────┐     ┌───────────┐     ┌───────────┐  │
+│  │ Generator │ ──▶ │ Reviewer  │ ──▶ │  Refiner  │  │
+│  │  (schema  │     │ (scoring  │     │ (bounded  │  │
+│  │  + retry) │     │  + pass/  │     │  max 2)   │  │
+│  │           │     │   fail)   │     │           │  │
+│  └───────────┘     └─────┬─────┘     └───────────┘  │
+│                     Pass? │                          │
+│                    ┌──────┴──────┐                   │
+│                   Yes           No → Refine loop     │
+│                    │                                 │
+│                    ▼                                 │
+│              ┌───────────┐                           │
+│              │  Tagger   │ (approved only)            │
+│              └───────────┘                           │
+│                    │                                 │
+│                    ▼                                 │
+│              RunArtifact                             │
+└─────────────────────────────────────────────────────┘
+        │
+        ▼
+   FastAPI + SQLite
 ```
+
+## Scoring Criteria
+
+The Reviewer evaluates on a 1–5 scale:
+
+| Criterion | What it measures |
+|-----------|-----------------|
+| Age Appropriateness | Language complexity, vocabulary, and concepts relative to grade level |
+| Correctness | Factual accuracy of explanations and MCQ answers |
+| Clarity | Readability and unambiguity of explanations and questions |
+| Coverage | Depth and breadth of topic coverage |
+
+**Pass criteria:** average ≥ 4.0 AND no individual score < 3.
 
 ## Project Structure
 
 ```
-Adaptive Learning Content System/
 ├── agents/
-│   ├── __init__.py          # Package exports
-│   ├── generator.py         # GeneratorAgent class
-│   ├── reviewer.py          # ReviewerAgent class
-│   └── orchestrator.py      # Pipeline orchestration
+│   ├── generator.py       # Content generation with retry
+│   ├── reviewer.py        # Quantitative evaluation
+│   ├── refiner.py         # Feedback-driven refinement
+│   ├── tagger.py          # Metadata classification
+│   └── orchestrator.py    # Pipeline orchestration
+├── schemas/
+│   └── models.py          # Pydantic models and enums
+├── api/
+│   └── backend.py         # FastAPI endpoints
+├── storage/
+│   └── store.py           # SQLite persistence
+├── tests/
+│   └── test_pipeline.py   # 20+ test cases
 ├── ui/
-│   └── app.py               # Streamlit web interface
-├── config.py                # Configuration constants
-├── example_usage.py         # CLI example for testing without UI
-├── requirements.txt         # Python dependencies
-├── .env.example             # API key template
-├── .gitignore
-└── README.md
+│   └── app.py             # Streamlit interface
+├── config.py              # Centralized configuration
+├── run_api.py             # API launcher
+├── example_usage.py       # CLI example
+└── requirements.txt
 ```
 
 ## Setup
@@ -73,44 +105,48 @@ Adaptive Learning Content System/
 
 ### Installation
 
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-2. **Configure API key:**
-   ```bash
-   cp .env.example .env
-   # Edit .env and set OPENAI_API_KEY
-   ```
+### Configure API key
 
-   Or set the environment variable directly:
-   ```bash
-   # Windows (PowerShell):
-   $env:OPENAI_API_KEY = "sk-..."
+```bash
+# Copy template and edit
+cp .env.example .env
 
-   # Linux/Mac:
-   export OPENAI_API_KEY=sk-...
-   ```
+# Or set directly (PowerShell)
+$env:OPENAI_API_KEY = "sk-..."
+
+# Or set directly (Linux/Mac)
+export OPENAI_API_KEY=sk-...
+```
 
 ## Usage
 
-### Web UI
+### FastAPI Backend
+
+```bash
+python run_api.py
+```
+
+Available at `http://localhost:8000`. Interactive docs at `/docs`.
+
+**Endpoints:**
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/generate` | Run full pipeline, returns RunArtifact |
+| GET | `/history` | Paginated artifact history (optional user_id filter) |
+| GET | `/artifact/{run_id}` | Retrieve specific RunArtifact |
+| GET | `/health` | Health check |
+| GET | `/stats` | Pipeline statistics |
+
+### Streamlit UI
 
 ```bash
 streamlit run ui/app.py
 ```
-
-The application opens at `http://localhost:8501`.
-
-1. Select a **Grade Level** (1-12)
-2. Enter a **Topic** (e.g., "Types of angles")
-3. Click **Run Pipeline**
-4. View results across three tabs:
-   - **Generated Content** — explanation + MCQs
-   - **Reviewer Feedback** — pass/fail with specific feedback items
-   - **Refinement** — improved content if the initial output failed review
-5. Download results as JSON
 
 ### Programmatic Usage
 
@@ -118,12 +154,11 @@ The application opens at `http://localhost:8501`.
 from agents.orchestrator import Orchestrator
 
 orchestrator = Orchestrator(api_key="sk-...")
-result = orchestrator.run_pipeline(grade=4, topic="Types of angles")
+artifact = orchestrator.execute(grade=5, topic="Fractions")
 
-print(result["generator_output"])
-print(result["initial_reviewer_output"])
-print(result["refined_output"])
-print(result["final_status"])
+print(artifact.final.status.value)   # "approved" or "rejected"
+print(len(artifact.attempts))        # number of attempts taken
+print(artifact.model_dump_json())    # full audit trail as JSON
 ```
 
 ### CLI Example
@@ -132,73 +167,35 @@ print(result["final_status"])
 python example_usage.py
 ```
 
-Runs two sample inputs and saves results as JSON files.
+## Running Tests
 
-## Agent Specifications
-
-### Generator Agent
-
-**Input:**
-```json
-{
-    "grade": 4,
-    "topic": "Types of angles"
-}
+```bash
+pytest tests/ -v
 ```
 
-**Output:**
-```json
-{
-    "explanation": "An angle is formed when two rays meet at a point...",
-    "mcqs": [
-        {
-            "question": "What is an acute angle?",
-            "options": ["Less than 90 degrees", "Exactly 90 degrees", "More than 90 degrees", "Exactly 180 degrees"],
-            "answer": "A"
-        }
-    ]
-}
-```
+All tests use mocked LLM calls and cover:
+- Schema validation failure handling
+- Generator retry on validation errors
+- Reviewer quantitative scoring
+- Fail → refine → pass workflow
+- Fail → refine → fail → reject workflow
+- Tagger only runs on approved content
+- Storage round-trip (write / read)
+- API endpoint validation
 
-### Reviewer Agent
+## Design Decisions
 
-**Input:** Content JSON from the Generator Agent.
-
-**Output:**
-```json
-{
-    "status": "pass",
-    "feedback": [
-        "Sentence 2 is too complex for Grade 4",
-        "Question 3 tests a concept not introduced"
-    ]
-}
-```
-
-## Configuration
-
-Both agents use `gpt-4o-mini` by default. To change the model, edit the `self.model` attribute in `agents/generator.py` and `agents/reviewer.py`.
-
-Refinement is limited to **1 pass** by design. This is enforced in `agents/orchestrator.py`.
-
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| `OPENAI_API_KEY not set` | Set via `.env` file or environment variable |
-| `Invalid JSON response` | Re-run; LLM output can be non-deterministic |
-| Slow generation | System makes 2-3 LLM calls per run; use a faster model if needed |
+| Decision | Rationale |
+|----------|-----------|
+| Max 2 refinement attempts | Prevents infinite loops while allowing recovery from marginal failures |
+| Typed `FinalResult` model | Eliminates untyped `Dict[str, Any]` — all fields are schema-validated |
+| Generator retry (1 max) | LLM outputs can be non-deterministic; a single retry handles transient parsing failures |
+| Centralized config | Scoring thresholds, model names, and temperatures are defined once in `config.py` |
+| Severity/Difficulty/BloomsLevel enums | Prevents invalid free-text values in review feedback and tags |
 
 ## Limitations
 
 - Content quality depends on the underlying LLM
-- Refinement is limited to one pass to prevent infinite loops
-- MCQs always have exactly 4 options with a single correct answer
+- MCQs are fixed at 4 options with a single correct answer
 - Requires a valid OpenAI API key with available credits
-
-## Support
-
-For issues or questions:
-1. Check the troubleshooting section
-2. Review example usage in the UI
-3. Check OpenAI API documentation (https://platform.openai.com/docs)
+- SQLite storage is suitable for development; production should use PostgreSQL

@@ -1,0 +1,182 @@
+{
+  "run_id": "run_20260421_143022_a7f3b9",
+  "input": {
+    "grade": 5,
+    "topic": "Fractions"
+  },
+  "attempts": [
+    {
+      "attempt_number": 1,
+      "status": "fail",
+      "draft": {
+        "explanation": {
+          "text": "A fraction represents a part of a whole. When you divide something into equal parts, each part is a fraction of the whole. For example, if you cut a pizza into 4 equal slices and eat 1 slice, you have eaten 1/4 of the pizza. The top number (numerator) tells you how many parts you have, and the bottom number (denominator) tells you how many equal parts make up the whole.",
+          "grade": 5
+        },
+        "mcqs": [
+          {
+            "question": "What is 1/2 of 8?",
+            "options": ["2", "4", "6", "8"],
+            "correct_index": 1
+          },
+          {
+            "question": "Which fraction is larger, 1/2 or 1/4?",
+            "options": ["1/2", "1/4", "They are equal", "Cannot determine"],
+            "correct_index": 0
+          },
+          {
+            "question": "If a pizza has 8 slices and you eat 2, what fraction did you eat?",
+            "options": ["1/8", "2/8", "2/6", "1/2"],
+            "correct_index": 1
+          },
+          {
+            "question": "What does the bottom number in a fraction represent?",
+            "options": ["The number eaten", "The total number of parts", "The numerator", "The size of each part"],
+            "correct_index": 1
+          }
+        ],
+        "teacher_notes": {
+          "learning_objective": "Students will understand fractions as parts of a whole and be able to identify numerator and denominator",
+          "common_misconceptions": [
+            "Thinking larger denominator means larger fraction",
+            "Not recognizing equivalent fractions",
+            "Confusing numerator and denominator positions"
+          ]
+        }
+      },
+      "review": {
+        "scores": {
+          "age_appropriateness": 4,
+          "correctness": 5,
+          "clarity": 3,
+          "coverage": 3
+        },
+        "pass_overall": false,
+        "average_score": 3.75,
+        "feedback": [
+          {
+            "field": "explanation.text",
+            "issue": "Could benefit from more concrete examples beyond pizza",
+            "severity": "medium"
+          },
+          {
+            "field": "mcqs[2].options",
+            "issue": "Option '2/6' is confusing as it's not simplified",
+            "severity": "low"
+          }
+        ]
+      },
+      "refined": null,
+      "refinement_feedback": null,
+      "timestamp_start": "2026-04-21T14:30:22.145Z",
+      "timestamp_end": "2026-04-21T14:30:35.892Z"
+    },
+    {
+      "attempt_number": 2,
+      "status": "pass",
+      "draft": null,
+      "review": {
+        "scores": {
+          "age_appropriateness": 5,
+          "correctness": 5,
+          "clarity": 4,
+          "coverage": 4
+        },
+        "pass_overall": true,
+        "average_score": 4.5,
+        "feedback": []
+      },
+      "refined": {
+        "explanation": {
+          "text": "A fraction represents a part of a whole. When you divide something into equal parts, each part is a fraction of the whole. For example, if you cut a pizza into 4 equal slices and eat 1 slice, you have eaten 1/4 of the pizza. If you have a chocolate bar with 8 squares and break off 3 squares, you have 3/8 of the bar. The top number (numerator) tells you how many parts you have, and the bottom number (denominator) tells you how many equal parts make up the whole.",
+          "grade": 5
+        },
+        "mcqs": [
+          {
+            "question": "What is 1/2 of 8?",
+            "options": ["2", "4", "6", "8"],
+            "correct_index": 1
+          },
+          {
+            "question": "Which fraction is larger, 1/2 or 1/4?",
+            "options": ["1/2", "1/4", "They are equal", "Cannot determine"],
+            "correct_index": 0
+          },
+          {
+            "question": "If a pizza has 8 slices and you eat 2, what fraction did you eat?",
+            "options": ["1/8", "2/8", "1/4", "1/2"],
+            "correct_index": 1
+          },
+          {
+            "question": "What does the bottom number in a fraction represent?",
+            "options": ["The number eaten", "The total number of parts", "The numerator", "The size of each part"],
+            "correct_index": 1
+          }
+        ],
+        "teacher_notes": {
+          "learning_objective": "Students will understand fractions as parts of a whole and be able to identify numerator and denominator",
+          "common_misconceptions": [
+            "Thinking larger denominator means larger fraction",
+            "Not recognizing equivalent fractions",
+            "Confusing numerator and denominator positions"
+          ]
+        }
+      },
+      "refinement_feedback": "SCORE SUMMARY:\n- age_appropriateness: 4/5\n- correctness: 5/5\n- clarity: 3/5\n- coverage: 3/5\n- Average: 3.75/5.0\n\nREVIEWER FEEDBACK:\n1. [MEDIUM] explanation.text: Could benefit from more concrete examples beyond pizza\n2. [LOW] mcqs[2].options: Option '2/6' is confusing as it's not simplified",
+      "timestamp_start": "2026-04-21T14:30:36.012Z",
+      "timestamp_end": "2026-04-21T14:30:48.734Z"
+    }
+  ],
+  "final": {
+    "status": "approved",
+    "content": {
+      "explanation": {
+        "text": "A fraction represents a part of a whole. When you divide something into equal parts, each part is a fraction of the whole. For example, if you cut a pizza into 4 equal slices and eat 1 slice, you have eaten 1/4 of the pizza. If you have a chocolate bar with 8 squares and break off 3 squares, you have 3/8 of the bar. The top number (numerator) tells you how many parts you have, and the bottom number (denominator) tells you how many equal parts make up the whole.",
+        "grade": 5
+      },
+      "mcqs": [
+        {
+          "question": "What is 1/2 of 8?",
+          "options": ["2", "4", "6", "8"],
+          "correct_index": 1
+        },
+        {
+          "question": "Which fraction is larger, 1/2 or 1/4?",
+          "options": ["1/2", "1/4", "They are equal", "Cannot determine"],
+          "correct_index": 0
+        },
+        {
+          "question": "If a pizza has 8 slices and you eat 2, what fraction did you eat?",
+          "options": ["1/8", "2/8", "1/4", "1/2"],
+          "correct_index": 1
+        },
+        {
+          "question": "What does the bottom number in a fraction represent?",
+          "options": ["The number eaten", "The total number of parts", "The numerator", "The size of each part"],
+          "correct_index": 1
+        }
+      ],
+      "teacher_notes": {
+        "learning_objective": "Students will understand fractions as parts of a whole and be able to identify numerator and denominator",
+        "common_misconceptions": [
+          "Thinking larger denominator means larger fraction",
+          "Not recognizing equivalent fractions",
+          "Confusing numerator and denominator positions"
+        ]
+      }
+    },
+    "tags": {
+      "subject": "Mathematics",
+      "topic": "Fractions",
+      "grade": 5,
+      "difficulty": "Medium",
+      "content_type": ["Explanation", "Quiz"],
+      "blooms_level": "Understanding"
+    }
+  },
+  "timestamps": {
+    "started_at": "2026-04-21T14:30:22.145Z",
+    "finished_at": "2026-04-21T14:30:49.201Z"
+  },
+  "user_id": "demo_user"
+}
